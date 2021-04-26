@@ -47,7 +47,7 @@ type Market @entity {
     underlyingAddress: Bytes!
     "Underlying token name"
     underlyingName: String!
-    "Underlying price of token in ETH (ex. 0.007 DAI)"
+    "Underlying price of token in USD"
     underlyingPrice: BigDecimal!
     "Underlying token symbol"
     underlyingSymbol: String!
@@ -61,8 +61,8 @@ type Market @entity {
     borrowIndex: BigDecimal!
     "The factor determining interest that goes to reserves"
     reserveFactor: BigInt!
-    "Underlying token price in USD"
-    underlyingPriceUSD: BigDecimal!
+    # "Underlying token price in USD"
+    # underlyingPriceUSD: BigDecimal!
     "Underlying token decimal length"
     underlyingDecimals: Int!
 }
@@ -76,6 +76,8 @@ type Account @entity {
     id: ID!
     "Array of CTokens user is in"
     tokens: [AccountCToken!]! @derivedFrom(field: "account")
+    "Array of CProtection user owns"
+    cProtections: [CProtection!]! @derivedFrom(field: "account")
     "Count user has been liquidated"
     countLiquidated: Int!
     "Count user has liquidated others"
@@ -145,6 +147,29 @@ type AccountCToken @entity {
 
     # lifetimeBorrowInterestAccrued: BigDecimal!
     # FORMULA: lifetimeBorrowInterestAccrued = borrowBalanceUnderlying - totalUnderlyingBorrowed + totalUnderlyingRepaid
+}
+
+"""
+CProtection entity which cointain deposited C-OP
+"""
+type CProtection @entity {
+    id: ID!
+
+    tokenId: BigInt!
+
+    underlyingTokenId: BigInt!
+
+    underlyingAsset: Bytes!
+
+    account: Account!
+
+    strike: BigDecimal!
+
+    amount: BigDecimal!
+
+    lockedValue: BigDecimal!
+    
+    expirationTimestamp: BigInt!
 }
 
 """
