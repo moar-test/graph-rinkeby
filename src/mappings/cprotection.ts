@@ -24,7 +24,8 @@ export function handleCProtectionMinted(event: Mint): void {
     .div(exponentToBigDecimal(underlyingAsset.decimals()))
 
   cop.lockedValue = zeroBD
-  cop.strike = event.params.strikePrice.toBigDecimal()
+  cop.strike = event.params.strikePrice.toBigDecimal().div(exponentToBigDecimal(18))
+
   cop.account = event.params.minter.toHexString()
   cop.expirationTimestamp = event.params.expirationTime
   cop.save()
